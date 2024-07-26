@@ -33,7 +33,6 @@ int main(void)
     }
     glViewport(0,0,800,800);
     glfwSetFramebufferSizeCallback(window,&framebuffer_size_callback);
-
     /**
      * Hardware's specifications
      * Setting stb library to flip the image 
@@ -47,7 +46,9 @@ int main(void)
     stbi_set_flip_vertically_on_load(true); 
 
 
-
+    /**
+     * The loop for rendering
+     */
     while (!glfwWindowShouldClose(window))
     {
         util::processInput(window);
