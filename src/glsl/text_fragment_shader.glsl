@@ -8,5 +8,5 @@ uniform sampler2D myTexture;
 
 void main()
 {
-    frCol = texture(myTexture, texCoord);
+    frCol = texture(myTexture,texCoord);
 }

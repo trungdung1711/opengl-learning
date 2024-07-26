@@ -4,7 +4,7 @@ project(OpenGL)
 find_package(OpenGL REQUIRED)
 
 
-add_executable(app ${PROJECT_SOURCE_DIR}/src/l1.cpp 
+add_executable(app ${PROJECT_SOURCE_DIR}/src/app.cpp 
                   ${PROJECT_SOURCE_DIR}/include/callback/callback.cpp 
                   ${PROJECT_SOURCE_DIR}/include/util/util.cpp 
                   ${PROJECT_SOURCE_DIR}/include/util/Shader.cpp

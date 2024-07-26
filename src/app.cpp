@@ -8,6 +8,8 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <thread>
+#include <chrono>
 int main(void)
 {
     /**
@@ -18,7 +20,7 @@ int main(void)
     if (!glfwInit())
         return -1;
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(800, 800, "My first OpenGl", NULL, NULL);
+    window = glfwCreateWindow(800, 800, "OpenGl", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -44,6 +46,8 @@ int main(void)
 
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS,&n);
     std::cout <<"Number of texture uints: " << n << '\n';
+
+    stbi_set_flip_vertically_on_load(true); 
     
     
     float vertices_reg[]
@@ -227,13 +231,15 @@ int main(void)
      * Use of the texture
      */
     int w,h,nColourChannels;
-    unsigned char* data {stbi_load("../textures/t1.jpg", &w, &h, &nColourChannels,0)};
+    unsigned char* data {stbi_load("../textures/t0.jpg", &w, &h, &nColourChannels,0)};
     std::cout << "width: " << w << '\n';
     std::cout << "height: " << h << '\n';
     std::cout << "nColourChannels: " << nColourChannels << '\n';
 
+    /* first texture*/
     GLuint texture;
     glGenTextures(1,&texture);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,texture);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
@@ -251,17 +257,17 @@ int main(void)
         std::cerr << "Failed to load the texture\n";
         return -1;
     }
-    glBindTexture(GL_TEXTURE_2D, 0);
 
 
     /**Second texture */
-    unsigned char* data_1 {stbi_load("../textures/t2.png", &w, &h, &nColourChannels,0)};
+    unsigned char* data_1 {stbi_load("../textures/t4.png", &w, &h, &nColourChannels,0)};
     std::cout << "width: " << w << '\n';
     std::cout << "height: " << h << '\n';
     std::cout << "nColourChannels: " << nColourChannels << '\n';
 
     GLuint texture_1;
     glGenTextures(1,&texture_1);
+    glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D,texture_1);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
@@ -271,10 +277,54 @@ int main(void)
     
     if (data_1)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, (void*)data_1);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)data_1);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
-    glBindTexture(GL_TEXTURE_2D, 0);
+
+
+    unsigned char* data_2 {stbi_load("../textures/t2.png", &w, &h, &nColourChannels,0)};
+    std::cout << "width: " << w << '\n';
+    std::cout << "height: " << h << '\n';
+    std::cout << "nColourChannels: " << nColourChannels << '\n';
+
+    GLuint texture_2;
+    glGenTextures(1,&texture_2);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D,texture_2);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+    if (data_2)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)data_2);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+
+
+    unsigned char* data_3 {stbi_load("../textures/t3.png", &w, &h, &nColourChannels,0)};
+    std::cout << "width: " << w << '\n';
+    std::cout << "height: " << h << '\n';
+    std::cout << "nColourChannels: " << nColourChannels << '\n';
+
+    GLuint texture_3;
+    glGenTextures(1,&texture_3);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D,texture_3);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+    if (data_3)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)data_3);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    int loop {0};
 
     while (!glfwWindowShouldClose(window))
     {
@@ -300,8 +350,22 @@ int main(void)
         //s2.setFloat("y_off",value);
         glBindVertexArray(text_vao);
         s3.use();
-        glBindTexture(GL_TEXTURE_2D, texture);
+        /**
+         * To use the texture in the unit 0
+         */
+        if (loop % 2 == 0)
+        {
+            s3.setInt("myTexture",2);
+        }
+        else
+        {
+            s3.setInt("myTexture",3);
+        }
+        // s3.setInt("myTexture0",2);
+        // s3.setInt("myTexture1",3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        loop++;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
         // glUseProgram(shaderProgram);
         // glBindVertexArray(vao[0]);
@@ -326,6 +390,9 @@ int main(void)
     glDeleteTextures(1,&texture);
 
     stbi_image_free(data);
+    stbi_image_free(data_1);
+    stbi_image_free(data_2);
+    stbi_image_free(data_3);
 
     glfwTerminate();
     return 0;
