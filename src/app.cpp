@@ -194,11 +194,12 @@ int main(void)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)data_3);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
-    int loop {0};
+
+    float mixVal {0.5f};
 
     while (!glfwWindowShouldClose(window))
     {
-        util::processInput(window);
+        util::processInput(window, mixVal);
         /* Render here */
         glClearColor(0.5f,0.5f,0.5f,0.1f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -207,17 +208,10 @@ int main(void)
         /**
          * To use the texture in the unit 0
          */
-        if (loop % 2 == 0)
-        {
-            s3.setInt("myTexture",2);
-        }
-        else
-        {
-            s3.setInt("myTexture",3);
-        }
+        s3.setInt("myTexture",2);
+        s3.setInt("myTexture_1",3);
+        s3.setFloat("mixVal",mixVal);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        loop++;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

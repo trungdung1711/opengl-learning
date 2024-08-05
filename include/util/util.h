@@ -4,6 +4,6 @@
 #include <string>
 namespace util
 {
-    void processInput(GLFWwindow * window);
+    void processInput(GLFWwindow * window, float& mixVal);
 }
 #endif
