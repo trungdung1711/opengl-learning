@@ -16,7 +16,7 @@ if (GLEW_STATIC)
     target_compile_definitions(app PRIVATE "GLEW_STATIC")
 endif()
 
-target_include_directories(app PUBLIC ${PROJECT_SOURCE_DIR}/libs PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(app PUBLIC ${PROJECT_SOURCE_DIR}/libs PUBLIC ${PROJECT_SOURCE_DIR}/include PUBLIC "D:/trungdung/LIBS/glm-1.0.1")
 target_link_libraries(app PUBLIC "D:/trungdung/LIBS/glfw-3.4.bin.WIN64/glfw-3.4.bin.WIN64/lib-mingw-w64/libglfw3.a"
                           PUBLIC "D:/trungdung/LIBS/glew-2.1.0-win32/glew-2.1.0/lib/Release/x64/glew32s.lib"
                           PUBLIC OpenGL::GL)
